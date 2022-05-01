@@ -1,6 +1,6 @@
 ﻿namespace Catalog.Domain.Common
 {
-    public abstract class BaseEntity
+    public abstract class EntityBase
     {
         public int Id { get; set; }
     }

@@ -2,7 +2,7 @@
 
 namespace Catalog.Domain.Entities
 {
-    public class ProductType : BaseEntity
+    public class ProductType : EntityBase
     {
         public string Name { get; set; }
     }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalog.API.Extensions;
+using Catalog.Application;
+using Catalog.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,6 +33,9 @@ namespace Catalog.API
 
             services.AddControllers();
             services.AddSwaggerDocumentation();
+
+            services.AddApplicationServices();
+            services.AddInfrastructureServices(_config);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
