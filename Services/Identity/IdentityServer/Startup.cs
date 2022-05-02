@@ -19,25 +19,26 @@ namespace IdentityServer
             services.AddIdentityServer()
                 .AddInMemoryClients(Config.Clients)
                 .AddInMemoryApiScopes(Config.ApiScopes)
-                //.AddInMemoryIdentityResources(Config.IdentityResources)
-                //.AddInMemoryApiResources(Config.ApiResources)
-                //.AddTestUsers(Config.TestUsers)
+                .AddInMemoryIdentityResources(Config.IdentityResources)
+                .AddInMemoryApiResources(Config.ApiResources)
+                .AddTestUsers(Config.TestUsers)
                 .AddDeveloperSigningCredential();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseIdentityServer();
 
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapDefaultControllerRoute();
-                });
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }

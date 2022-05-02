@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Catalog.Domain.Models.Response.ProductResponse>
+@{
+    ViewData["Title"] = "Home Page";
+}
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Brand</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Price</td>
+                    <td>@item.ProductBrand</td>
+                    <td>@item.ProductType</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
