@@ -1,4 +1,7 @@
 ﻿using Catalog.Domain.Models.Response;
+using IdentityModel.Client;
+using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Catalog.Client.Mvc.ApiServices
 {
@@ -6,12 +9,36 @@ namespace Catalog.Client.Mvc.ApiServices
     {
         public async Task<IEnumerable<ProductResponse>> GetProductsAsync()
         {
-            var products = new List<ProductResponse>()
+            List<ProductResponse> products = new List<ProductResponse>();
+
+            // 1. Get Token from IS
+            var apiClientCredentials = new ClientCredentialsTokenRequest
             {
-                new ProductResponse() { Id = 1, Name = "Sample - 1", Description = "Sample product # 1", Price = 195.35m, ProductBrand = "Service", ProductType = "Boots" }
+                Address = "https://localhost:5005/connect/token",
+                ClientId = "CatalogClient",
+                ClientSecret = "secret",
+                Scope = "CatalogAPI"
             };
 
-            return await Task.FromResult(products);
+            var client = new HttpClient();
+            var tokenRespponse = await client.RequestClientCredentialsTokenAsync(apiClientCredentials);
+            if(tokenRespponse.IsError)
+            {
+                return products;
+            }
+
+            // 2. Send Request to Protected API
+            var apiClient = new HttpClient();
+            apiClient.SetBearerToken(tokenRespponse.AccessToken);
+
+            var response = await apiClient.GetAsync("https://localhost:5001/api/products");
+            response.EnsureSuccessStatusCode();
+
+            // 3. Deserialize the data to our Model 
+            var content = await response.Content.ReadAsStringAsync();
+            products = JsonConvert.DeserializeObject<List<ProductResponse>>(content);
+
+            return products;
         }
     }
 }
